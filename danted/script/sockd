@@ -14,7 +14,7 @@ DESC="Dante SOCKS 5 daemon"
 PID_FILE="/var/run/sockd.pid"
 CONFIG_FILE="/etc/danted/sockd.conf"
 PASSWD_FILE="/etc/danted/sockd.passwd"
-ONLINE_LINK="https://gitee.com/wuming2/script/danted/raw/master/script/sockd"
+ONLINE_LINK="https://raw.githubusercontent.com/bak003/script/master/danted/script/sockd"
 
 test -f $DAEMON || exit 0
 test -f $CONFIG_FILE || exit 0

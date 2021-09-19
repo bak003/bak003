@@ -12,7 +12,7 @@ if [ $(id -u) != "0" ]; then
     exit 1
 fi
 
-REQUEST_SERVER="https://gitee.com/wuming2/script/danted/raw/master"
+REQUEST_SERVER="https://raw.githubusercontent.com/bak003/script/master/danted"
 SCRIPT_SERVER="https://public.sockd.info"
 SYSTEM_RECOGNIZE=""
 

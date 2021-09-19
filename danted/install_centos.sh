@@ -201,7 +201,7 @@ download_script_file(){
     [ -z "${filename}" ] && filename="$path"
 
     [ -n "$path" ] && \
-        wget -q --no-check-certificate https://gitee.com/wuming2/script/danted/raw/master/${path} -O ${filename}
+        wget -q --no-check-certificate https://raw.githubusercontent.com/bak003/script/master/danted/${path} -O ${filename}
 
     [ -f "${filename}" ] && [ -n "${execute}" ] && chmod +x ${filename}
 }
