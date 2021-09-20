@@ -14,6 +14,7 @@ ALTER_ID=''
 REMOTE_IP=''
 REMOTE_PORT=''
 
+
 vmessConfig() {
     cat > $CONFIG_FILE<<-EOF
 {
