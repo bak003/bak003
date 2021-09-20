@@ -61,7 +61,7 @@ configRelay(){
   "inbounds": [
     {
       "listen": null,
-      "port": $LOCAL_PORT,
+      "port": $PORT,
       "protocol": "dokodemo-door",
       "settings": {
         "address": "$REMOTE_IP",
@@ -116,7 +116,7 @@ do
         PORT="${_PARAMETER#--port=}"
       ;;
       --config=*)
-        PORT="${_PARAMETER#--config=}"
+        CONFIG_FILE="${_PARAMETER#--config=}"
       ;;
       --uuid=*)
         UUID="${_PARAMETER#--uuid=}"
