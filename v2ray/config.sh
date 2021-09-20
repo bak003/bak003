@@ -3,67 +3,16 @@
 RUN_OPTS=$*
 
 CONFIG_FILE="/etc/xray/config.json"
-# CONFIG_FILE="./config.json"   
+# CONFIG_FILE="./config.json"
+METHOD=1
 PORT=1080
+
+#vmess config
 UUID=''
 ALTER_ID=''
-
-METHOD=1
-VLESS="false"
-TROJAN="false"
-TLS="false"
-WS="false"
-XTLS="false"
-KCP="false"
-FORWARD="false"
-
-configV2ray() {
-    mkdir -p /etc/xray
-    if [[ "$TROJAN" = "true" ]]; then
-        if [[ "$XTLS" = "true" ]]; then
-            trojanXTLSConfig
-        else
-            trojanConfig
-        fi
-        return 0
-    fi
-    if [[ "$VLESS" = "false" ]]; then
-        # VMESS + kcp
-        if [[ "$KCP" = "true" ]]; then
-            vmessKCPConfig
-            return 0
-        fi
-        # VMESS
-        if [[ "$TLS" = "false" ]]; then
-            vmessConfig
-        elif [[ "$WS" = "false" ]]; then
-            # VMESS+TCP+TLS
-            vmessTLSConfig
-        # VMESS+WS+TLS
-        else
-            vmessWSConfig
-        fi
-    #VLESS
-    else
-        if [[ "$KCP" = "true" ]]; then
-            vlessKCPConfig
-            return 0
-        fi
-        # VLESS+TCP
-        if [[ "$WS" = "false" ]]; then
-            # VLESS+TCP+TLS
-            if [[ "$XTLS" = "false" ]]; then
-                vlessTLSConfig
-            # VLESS+TCP+XTLS
-            else
-                vlessXTLSConfig
-            fi
-        # VLESS+WS+TLS
-        else
-            vlessWSConfig
-        fi
-    fi
-}
+#dokodemo-door config
+REMOTE_IP=''
+REMOTE_PORT=''
 
 vmessConfig() {
     cat > $CONFIG_FILE<<-EOF
@@ -93,7 +42,7 @@ vmessConfig() {
 EOF
 }
 
-configForward(){
+configRelay(){
     cat > $CONFIG_FILE<<-EOF
     {
   "log": null,
@@ -166,12 +115,21 @@ do
       --port=*)
         PORT="${_PARAMETER#--port=}"
       ;;
+      --config=*)
+        PORT="${_PARAMETER#--config=}"
+      ;;
       --uuid=*)
         UUID="${_PARAMETER#--uuid=}"
       ;;
       --alterid=*)
         ALTER_ID="${_PARAMETER#--alterid=}"
       ;;
+      --remote_ip=*)
+        REMOTE_IP="${_PARAMETER#--remote_ip=}"
+      ;;
+      --remote_port=*)
+          REMOTE_PORT="${_PARAMETER#--remote_port=}"
+        ;;
       *)
         echo "option ${_PARAMETER} is not support"
         exit 1
@@ -180,9 +138,21 @@ do
     esac
 done
 
-if [ "$METHOD" -eq 1 ]; then
-    echo 'method is vmess'
-fi
 
-configV2ray
+create_server(){
+  mkdir -p /etc/xray
+
+  if [ "$METHOD" -eq 1 ]; then
+      echo 'method is vmess'
+      vmessConfig
+  fi
+
+  if [ "$METHOD" -eq 5 ]; then
+      echo 'method is dokodemo-door'
+      configRelay
+  fi
+}
+
+create_server
+
 
