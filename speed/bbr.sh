@@ -2,32 +2,17 @@
 
 cur_dir="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
 
-_red() {
-    printf '\033[1;31;31m%b\033[0m' "$1"
-}
-
-_green() {
-    printf '\033[1;31;32m%b\033[0m' "$1"
-}
-
-_yellow() {
-    printf '\033[1;31;33m%b\033[0m' "$1"
-}
-
 _info() {
-    _green "[Info] "
     printf -- "%s" "$1"
     printf "\n"
 }
 
 _warn() {
-    _yellow "[Warning] "
     printf -- "%s" "$1"
     printf "\n"
 }
 
 _error() {
-    _red "[Error] "
     printf -- "%s" "$1"
     printf "\n"
     exit 1
@@ -318,16 +303,5 @@ opsy=$( _os_full )
 arch=$( uname -m )
 lbit=$( getconf LONG_BIT )
 kern=$( uname -r )
-
-clear
-echo "---------- System Information ----------"
-echo " OS      : $opsy"
-echo " Arch    : $arch ($lbit Bit)"
-echo " Kernel  : $kern"
-echo "----------------------------------------"
-echo " Automatically enable TCP BBR script"
-echo
-echo "----------------------------------------"
-echo
 
 install_bbr 2>&1 | tee ${cur_dir}/install_bbr.log
