@@ -295,7 +295,6 @@ install_bbr() {
     check_os
     install_kernel
     sysctl_config
-    reboot_os
 }
 
 [[ $EUID -ne 0 ]] && _error "This script must be run as root"
