@@ -306,5 +306,6 @@ kern=$( uname -r )
 #disable ipv6
 echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6
+echo ip_resolve=4 >> /etc/yum.conf
 
 install_bbr 2>&1 | tee ${cur_dir}/install_bbr.log
