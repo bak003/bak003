@@ -298,9 +298,7 @@ download_script_file "script/sockd" "${BIN_SCRIPT}" "execute"
 [ -n "$COLOR_PATH" ] && [ ! -s "$COLOR_PATH" ] && download_script_file "script/color" $COLOR_PATH && . $COLOR_PATH
 
 ########################################## DEBIAN 8 ####################################################################
-#fix centos x86_64
-cp /lib/security/pam_pwdfile.so /lib64/security/
-yum install gcc g++ make vim pam-devel tcp_wrappers-devel unzip httpd-tools -y
+yum install gcc make vim pam-devel tcp_wrappers-devel unzip httpd-tools -y
 
 mkdir -p /tmp/danted && rm /tmp/danted/* -rf && cd /tmp/danted
 
@@ -312,6 +310,14 @@ if [ -z "$(command -v start-stop-daemon)" ];then
     tar zxvf start-stop-daemon-IR1_9_18-2.tar.gz
     gcc apps/sys-utils/start-stop-daemon-IR1_9_18-2/start-stop-daemon.c \
         -o start-stop-daemon -o /sbin/start-stop-daemon
+fi
+
+#fix error
+wget http://repo.iotti.biz/CentOS/7/x86_64/pam_pwdfile-1.0-1.el7.lux.x86_64.rpm && rpm -i pam_pwdfile-1.0-1.el7.lux.x86_64.rpm
+if command -v htpasswd >/dev/null 2>&1; then
+  echo 'exists htpasswd'
+else
+  yum install -y httpd-tools
 fi
 
 #--# Check libpam-pwdfile
@@ -330,7 +336,7 @@ if [ -d /lib64/security/ ] && [ ! -f /lib64/security/pam_pwdfile.so ];then
 fi
 
 if [ "$INSTALL_FROM" == "compile" ];then
-    yum install gcc g++ make libpam-dev libwrap0-dev -y
+    yum install gcc make libpam-dev libwrap0-dev -y
 
     download_file "source/dante-${VERSION}.tar.gz" "dante-${VERSION}.tar.gz"
 
