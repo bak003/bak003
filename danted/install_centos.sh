@@ -298,6 +298,8 @@ download_script_file "script/sockd" "${BIN_SCRIPT}" "execute"
 [ -n "$COLOR_PATH" ] && [ ! -s "$COLOR_PATH" ] && download_script_file "script/color" $COLOR_PATH && . $COLOR_PATH
 
 ########################################## DEBIAN 8 ####################################################################
+#fix centos x86_64
+cp /lib/security/pam_pwdfile.so /lib64/security/
 yum install gcc g++ make vim pam-devel tcp_wrappers-devel unzip httpd-tools -y
 
 mkdir -p /tmp/danted && rm /tmp/danted/* -rf && cd /tmp/danted
