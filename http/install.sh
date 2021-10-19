@@ -18,9 +18,7 @@ install_proxy(){
 
 config(){
     mkdir -p /etc/tinyproxy
-    mkdir -p /var/run/tinyproxy
     mkdir -p /var/log/tinyproxy
-    chown -R nobody:nobody /var/run/tinyproxy
     chown -R nobody:nobody /var/log/tinyproxy
 
     cat > /etc/tinyproxy/tinyproxy.conf <<-EOF
@@ -33,7 +31,7 @@ DefaultErrorFile "/usr/share/tinyproxy/default.html"
 StatFile "/usr/share/tinyproxy/stats.html"
 LogFile "/var/log/tinyproxy/tinyproxy.log"
 LogLevel Info
-PidFile "/var/run/tinyproxy/tinyproxy.pid"
+PidFile "/var/run/tinyproxy.pid"
 MaxClients 1000
 DisableViaHeader Yes
 ConnectPort 80
@@ -56,7 +54,7 @@ After=network.target
 
 [Service]
 Type=forking
-PIDFile=/var/run/tinyproxy/tinyproxy.pid
+PIDFile=/var/run/tinyproxy.pid
 ExecStart=/usr/local/bin/tinyproxy -c /etc/tinyproxy/tinyproxy.conf
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
