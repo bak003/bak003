@@ -18,36 +18,36 @@ install_pptp(){
 
 
 config(){
-#     cp /etc/ppp/options.pptpd /etc/ppp/options.pptpd.bak
+     cp /etc/ppp/options.pptpd /etc/ppp/options.pptpd.bak
 
-#     cat >>/etc/pptpd.conf<<EOF
-# option /etc/ppp/options.pptpd
-# logwtmp
-# localip 10.6.0.1
-# remoteip 10.6.0.2-245
-# EOF
+     cat >>/etc/pptpd.conf<<EOF
+ option /etc/ppp/options.pptpd
+ logwtmp
+ localip 10.6.0.1
+ remoteip 10.6.0.2-245
+ EOF
 
 
-#     cat>/etc/ppp/options.pptpd<<EOF
-# name pptpd
-# refuse-pap
-# refuse-chap
-# refuse-mschap
-# require-mschap-v2
-# require-mppe-128
-# ms-dns 8.8.8.8
-# ms-dns 8.8.4.4
-# proxyarp
-# nodefaultroute
-# debug
-# lock
-# nobsdcomp
-# logfile /var/log/pptpd.log
-# EOF
+     cat>/etc/ppp/options.pptpd<<EOF
+ name pptpd
+ refuse-pap
+ refuse-chap
+ refuse-mschap
+ require-mschap-v2
+ require-mppe-128
+ ms-dns 8.8.8.8
+ ms-dns 8.8.4.4
+ proxyarp
+ nodefaultroute
+ debug
+ lock
+ nobsdcomp
+ logfile /var/log/pptpd.log
+ EOF
 
-    # sed -i '/net.ipv4.ip_forward/d' /etc/sysctl.conf
-    # echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
-    # sysctl -p
+     sed -i '/net.ipv4.ip_forward/d' /etc/sysctl.conf
+     echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+     sysctl -p
 
     # iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356
 
@@ -72,7 +72,7 @@ config(){
 
 
 install(){
-    # install_pptp
+    install_pptp
     config
 }
 
