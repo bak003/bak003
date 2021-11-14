@@ -17,10 +17,10 @@ install_pptp(){
 }
 
 
-config(){
-     cp /etc/ppp/options.pptpd /etc/ppp/options.pptpd.bak
+pre_config(){
+  cp /etc/ppp/options.pptpd /etc/ppp/options.pptpd.bak
 
-     cat >>/etc/pptpd.conf<<EOF
+  cat >>/etc/pptpd.conf<<EOF
 option /etc/ppp/options.pptpd
 logwtmp
 localip 10.6.0.1
@@ -28,7 +28,7 @@ remoteip 10.6.0.2-245
 EOF
 
 
-     cat>/etc/ppp/options.pptpd<<EOF
+  cat>/etc/ppp/options.pptpd<<EOF
 name pptpd
 refuse-pap
 refuse-chap
@@ -45,13 +45,13 @@ nobsdcomp
 logfile /var/log/pptpd.log
 EOF
 
-     sed -i '/net.ipv4.ip_forward/d' /etc/sysctl.conf
-     echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
-     sysctl -p
+  sed -i '/net.ipv4.ip_forward/d' /etc/sysctl.conf
+  echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+  sysctl -p
 
-    # iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356
-
-    let account_seq=1
+  # iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356
+  
+  let seq=1
     eth=`route | grep default | awk '{print $NF}'`
     for ((count=0;count<$NUM;count=count+1));
     do
@@ -60,18 +60,33 @@ EOF
             let j=$count*$RANGE_COUNT+$i+3
             let first=$count+$FIRST
             let second=$i+$SECOND
-            echo "$USERNAME$account_seq * $PASSWORD 10.6.0.$j" >>/etc/ppp/chap-secrets
             iptables -t nat -A POSTROUTING -s 10.6.0.$j -o $eth -j SNAT --to-source $IP_RANGE.$first.$second
-
-            let account_seq=$account_seq+1
+            let seq=$seq+1
         done
     done
 }
 
+config_user(){
+    let seq=1
+    for ((count=0;count<$NUM;count=count+1));
+    do
+        for ((i=0;i<$RANGE_COUNT;i=i+1));
+        do
+            let j=$count*$RANGE_COUNT+$i+3
+            echo "$USERNAME$seq * $PASSWORD 10.6.0.$j" >>/etc/ppp/chap-secrets
+            let seq=$seq+1
+        done
+    done
+}
 
 install(){
     install_pptp
-    config
+    pre_config
+    config_user
+}
+
+edit(){
+   config_user
 }
 
 echo "Current Options: $RUN_OPTS"
