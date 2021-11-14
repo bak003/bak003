@@ -53,11 +53,11 @@ EOF
 
     let account_seq=1
     eth=`route | grep default | awk '{print $NF}'`
-    for ((count=1;count<=$NUM;count=count+1));
+    for ((count=0;count<$NUM;count=count+1));
     do
-        for ((i=1;i<=$RANGE_COUNT;i=i+1));
+        for ((i=0;i<$RANGE_COUNT;i=i+1));
         do
-            let j=($count-1)*$RANGE_COUNT+$i+2
+            let j=$count*$RANGE_COUNT+$i+3
             let first=$count+$FIRST
             let second=$i+$SECOND
             # echo "vipgame$account_seq * vipgame321 10.6.0.$j" >>/etc/ppp/chap-secrets
