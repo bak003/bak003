@@ -9,7 +9,7 @@ PASSWORD='test'
 NUM=8
 FIRST=0
 SECOND=0
-METHOD=0 #0:create,1:edit
+METHOD=1 #1:create,2:edit
 
 install_pptp(){
     yum install -y epel-release
@@ -127,9 +127,9 @@ do
     esac
 done
 
-if [ $METHOD -eq 0 ];then
+if [ $METHOD -eq 1 ];then
     install
-elif [ $METHOD -eq 1 ];then
+elif [ $METHOD -eq 2 ];then
     edit
 else
     echo "method invalid"
