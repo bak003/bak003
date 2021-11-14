@@ -60,10 +60,8 @@ EOF
             let j=$count*$RANGE_COUNT+$i+3
             let first=$count+$FIRST
             let second=$i+$SECOND
-            # echo "vipgame$account_seq * vipgame321 10.6.0.$j" >>/etc/ppp/chap-secrets
-            # iptables -t nat -A POSTROUTING -s 10.6.0.$j -o em1 -j SNAT --to-source $IP_RANGE.$first.$second
-            echo "vipgame$account_seq * vipgame321 10.6.0.$j" >>chap-secrets
-            echo "iptables -t nat -A POSTROUTING -s 10.6.0.$j -o $eth -j SNAT --to-source $IP_RANGE.$first.$second" >>ipt.sh
+            echo "$USERNAME$account_seq * $PASSWORD 10.6.0.$j" >>/etc/ppp/chap-secrets
+            iptables -t nat -A POSTROUTING -s 10.6.0.$j -o $eth -j SNAT --to-source $IP_RANGE.$first.$second
 
             let account_seq=$account_seq+1
         done
