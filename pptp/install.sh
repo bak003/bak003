@@ -14,6 +14,7 @@ METHOD=0 #0:create,1:edit
 install_pptp(){
     yum install -y epel-release
     yum install ppp pptpd net-tools iptables-services -y
+    systemctl enable pptpd
 }
 
 
@@ -83,10 +84,12 @@ install(){
     install_pptp
     pre_config
     config_user
+    systemctl restart pptpd
 }
 
 edit(){
    config_user
+   systemctl restart pptpd
 }
 
 echo "Current Options: $RUN_OPTS"
