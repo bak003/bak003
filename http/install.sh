@@ -113,3 +113,6 @@ elif [ $METHOD -eq 2 ];then
 else
     echo "method invalid"
 fi
+
+#clean script
+rm -f install.sh
