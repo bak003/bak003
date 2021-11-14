@@ -49,7 +49,6 @@ EOF
   sed -i '/net.ipv4.ip_forward/d' /etc/sysctl.conf
   echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
   sysctl -p
-
   # iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356
   
   let seq=1
