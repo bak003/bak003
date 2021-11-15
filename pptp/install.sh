@@ -26,6 +26,7 @@ option /etc/ppp/options.pptpd
 logwtmp
 localip 10.6.0.1
 remoteip 10.6.0.2-245
+connections 1000
 EOF
 
 
