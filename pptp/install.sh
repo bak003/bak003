@@ -2,13 +2,8 @@
 
 RUN_OPTS=$*
 
-IP_RANGE=''
-RANGE_COUNT=0
 USERNAME='test'
 PASSWORD='test'
-NUM=8
-FIRST=0
-SECOND=0
 METHOD=1 #1:create,2:edit
 
 install_pptp(){
