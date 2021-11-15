@@ -50,34 +50,25 @@ EOF
   sed -i '/net.ipv4.ip_forward/d' /etc/sysctl.conf
   echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
   sysctl -p
-  # iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356
+  iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356
   
+  eth=`route | grep default | awk '{print $NF}'`
   let seq=1
-    eth=`route | grep default | awk '{print $NF}'`
-    for ((count=0;count<$NUM;count=count+1));
-    do
-        for ((i=0;i<$RANGE_COUNT;i=i+1));
-        do
-            let j=$count*$RANGE_COUNT+$i+3
-            let first=$count+$FIRST
-            let second=$i+$SECOND
-            iptables -t nat -A POSTROUTING -s 10.6.0.$j -o $eth -j SNAT --to-source $IP_RANGE.$first.$second
-            let seq=$seq+1
-        done
-    done
-    service iptables save
+  let j=3
+  for ip in ${IP_LIST};do
+    iptables -t nat -A POSTROUTING -s 10.6.0.$j -o $eth -j SNAT --to-source $ip
+    let j=$j+1
+  done
+  service iptables save
 }
 
 config_user(){
     let seq=1
-    for ((count=0;count<$NUM;count=count+1));
-    do
-        for ((i=0;i<$RANGE_COUNT;i=i+1));
-        do
-            let j=$count*$RANGE_COUNT+$i+3
-            echo "$USERNAME$seq * $PASSWORD 10.6.0.$j" >>/etc/ppp/chap-secrets
-            let seq=$seq+1
-        done
+    let j=$i+3
+    for ip in ${IP_LIST};do
+      echo "$USERNAME$seq * $PASSWORD 10.6.0.$j" >>/etc/ppp/chap-secrets
+      let seq=$seq+1
+      let j=$j+1
     done
 }
 
@@ -100,26 +91,14 @@ do
       --method=*)
         METHOD="${_PARAMETER#--method=}"
       ;;
-      --ip-range=*)
-        IP_RANGE="${_PARAMETER#--ip-range=}"
-      ;;
-      --range-count=*)
-        RANGE_COUNT="${_PARAMETER#--range-count=}"
+      --ip=*)   #split by: ip1,ip2,ip3
+        IP_LIST=$(echo "${_PARAMETER#--ip=}" | sed 's/,/\n/g' | sed '/^$/d')
       ;;
       --username=*)
         USERNAME="${_PARAMETER#--username=}"
       ;;
       --password=*)
         PASSWORD="${_PARAMETER#--password=}"
-      ;;
-      --num=*)
-        NUM="${_PARAMETER#--num=}"
-      ;;
-      --first=*)
-        FIRST="${_PARAMETER#--first=}"
-      ;;
-      --second=*)
-        SECOND="${_PARAMETER#--second=}"
       ;;
       *)
         echo "option ${_PARAMETER} is not support"
