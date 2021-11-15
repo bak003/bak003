@@ -64,6 +64,7 @@ EOF
             let seq=$seq+1
         done
     done
+    service iptables save
 }
 
 config_user(){
