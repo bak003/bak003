@@ -40,7 +40,6 @@ pre_config(){
 }
 
 config_l2tp(){
-
     cat > /etc/ipsec.conf<<EOF
 version 2.0
 
