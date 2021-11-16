@@ -58,10 +58,18 @@ EOF
 }
 
 config_user(){
+  cp -pf /etc/ppp/chap-secrets /etc/ppp/chap-secrets.bak
+
+  rm -f /etc/ppp/chap-secrets
+  cat > /etc/ppp/chap-secrets<<EOF
+# Secrets for authentication using CHAP
+# client    server    secret    IP addresses
+EOF
+
     let seq=1
     let j=$i+3
     for ip in ${IP_LIST};do
-      echo "$USERNAME$seq * $PASSWORD 10.6.0.$j" >>/etc/ppp/chap-secrets
+      echo "$USERNAME$seq pptpd $PASSWORD 10.6.0.$j" >>/etc/ppp/chap-secrets
       let seq=$seq+1
       let j=$j+1
     done
