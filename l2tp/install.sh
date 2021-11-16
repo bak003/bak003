@@ -145,7 +145,7 @@ EOF
 
 
 install(){
-	get_ip
+    get_ip
 	install_l2tp
 	pre_config
 	config_l2tp
@@ -158,7 +158,7 @@ install(){
 edit(){
     config_user
     systemctl restart ipsec
-	systemctl restart xl2tpd
+    systemctl restart xl2tpd
 }
 
 echo "Current Options: $RUN_OPTS"
