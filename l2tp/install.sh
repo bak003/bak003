@@ -177,6 +177,9 @@ do
       --password=*)
         PASSWORD="${_PARAMETER#--password=}"
       ;;
+      --psk=*)
+        PSK="${_PARAMETER#--psk=}"
+      ;;
       *)
         echo "option ${_PARAMETER} is not support"
         exit 1
