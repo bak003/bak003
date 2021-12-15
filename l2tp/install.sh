@@ -135,7 +135,7 @@ config_user(){
 EOF
 
     let seq=1
-    let j=$i+3
+    let j=3
     for ip in ${IP_LIST};do
       echo "$USERNAME$seq l2tpd $PASSWORD ${iprange}.$j" >>/etc/ppp/chap-secrets
       let seq=$seq+1
