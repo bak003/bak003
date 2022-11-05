@@ -7,6 +7,7 @@ PASSWORD='test'
 METHOD=1 #1:create,2:edit
 
 install_pptp(){
+    modprobe nf_conntrack_pptp
     yum install -y epel-release
     yum install ppp pptpd net-tools iptables-services -y
     systemctl enable pptpd
@@ -16,14 +17,15 @@ install_pptp(){
 pre_config(){
   cp /etc/ppp/options.pptpd /etc/ppp/options.pptpd.bak
 
-  cat >>/etc/pptpd.conf<<EOF
+  if [ ! -e /etc/pptpd.conf ]; then
+    cat >>/etc/pptpd.conf<<EOF
 option /etc/ppp/options.pptpd
 logwtmp
 localip 10.6.0.1
 remoteip 10.6.0.2-245
 connections 1000
 EOF
-
+  fi
 
   cat>/etc/ppp/options.pptpd<<EOF
 name pptpd
@@ -48,10 +50,10 @@ EOF
   iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356
   
   eth=`route | grep default | awk '{print $NF}'`
-  let seq=1
   let j=3
   for ip in ${IP_LIST};do
     iptables -t nat -A POSTROUTING -s 10.6.0.$j -o $eth -j SNAT --to-source $ip
+    
     let j=$j+1
   done
   service iptables save
@@ -60,11 +62,11 @@ EOF
 config_user(){
   cp -pf /etc/ppp/chap-secrets /etc/ppp/chap-secrets.bak
 
-  rm -f /etc/ppp/chap-secrets
-  cat > /etc/ppp/chap-secrets<<EOF
-# Secrets for authentication using CHAP
-# client    server    secret    IP addresses
-EOF
+#   rm -f /etc/ppp/chap-secrets
+#   cat > /etc/ppp/chap-secrets<<EOF
+# # Secrets for authentication using CHAP
+# # client    server    secret    IP addresses
+# EOF
 
     let seq=1
     let j=3
