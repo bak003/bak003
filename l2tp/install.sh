@@ -128,11 +128,11 @@ service iptables save
 config_user(){
     cp -pf /etc/ppp/chap-secrets /etc/ppp/chap-secrets.bak
 
-    rm -f /etc/ppp/chap-secrets
-    cat > /etc/ppp/chap-secrets<<EOF
-# Secrets for authentication using CHAP
-# client    server    secret    IP addresses
-EOF
+#     rm -f /etc/ppp/chap-secrets
+#     cat > /etc/ppp/chap-secrets<<EOF
+# # Secrets for authentication using CHAP
+# # client    server    secret    IP addresses
+# EOF
 
     let seq=1
     let j=3
