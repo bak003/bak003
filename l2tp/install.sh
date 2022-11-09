@@ -161,6 +161,12 @@ edit(){
     systemctl restart xl2tpd
 }
 
+uninstall(){
+    yum remove -y xl2tpd
+    rm -f /etc/xl2tpd/xl2tpd.conf
+    rm -f /etc/ppp/options.xl2tpd
+}
+
 echo "Current Options: $RUN_OPTS"
 for _PARAMETER in $RUN_OPTS
 do
@@ -193,5 +199,5 @@ if [ $METHOD -eq 1 ];then
 elif [ $METHOD -eq 2 ];then
     edit
 else
-    echo "method invalid"
+    uninstall
 fi
