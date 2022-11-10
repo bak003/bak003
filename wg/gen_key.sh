@@ -25,7 +25,7 @@ EOF
 cat > /root/client$i/client$j.conf <<-EOF
 [Interface]
 PrivateKey = $c1
-Address = 10.77.77.0/24
+Address = 10.77.$i.0/24
 DNS = 8.8.8.8
 MTU = 1420
 
