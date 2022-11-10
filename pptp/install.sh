@@ -84,6 +84,12 @@ install(){
     systemctl restart pptpd
 }
 
+uninstall(){
+  yum remove -y pptpd
+  rm -f /etc/pptpd.conf
+  rm -f /etc/ppp/options.pptpd
+}
+
 edit(){
    config_user
    systemctl restart pptpd
