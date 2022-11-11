@@ -43,8 +43,8 @@ cat > /etc/wireguard/wg0.conf <<-EOF
 [Interface]
 PrivateKey = $s1
 Address = 10.77.0.1/16 
-PostUp  = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT; iptables -I FORWARD -s 10.77.1.0/24 -d 10.77.1.0/24 -j DROP;iptables -I FORWARD -s 10.77.2.0/24 -d 10.77.2.0/24 -j DROP;iptables -I FORWARD -s 10.77.3.0/24 -d 10.77.3.0/24 -j DROP; iptables -t nat -A POSTROUTING -o $eth -j MASQUERADE
-PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT; iptables -D FORWARD -s 10.77.1.0/24 -d 10.77.1.0/24 -j DROP;iptables -D FORWARD -s 10.77.2.0/24 -d 10.77.2.0/24 -j DROP;iptables -D FORWARD -s 10.77.3.0/24 -d 10.77.3.0/24 -j DROP; iptables -t nat -D POSTROUTING -o $eth -j MASQUERADE
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o $eth -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o $eth -j MASQUERADE
 ListenPort = $port
 DNS = 8.8.8.8
 MTU = 1420
@@ -66,6 +66,7 @@ config_ip(){
     let j=1
     for ip in ${IP_LIST};do
       iptables -t nat -A POSTROUTING -s 10.77.$i.$j -o $eth -j SNAT --to-source $ip
+      echo "iptables -t nat -D POSTROUTING -s 10.77.$i.$j -o $eth -j SNAT --to-source $ip" >> /etc/wireguard/iptables_uninstall.sh
       let j=$j+1
     done
   done
@@ -82,6 +83,7 @@ install(){
 uninstall(){
   wg-quick down wg0
   yum remove -y wireguard-dkms wireguard-tools
+  bash /etc/wireguard/iptables_uninstall.sh
   rm -rf /etc/wireguard/
   echo "卸载完成"
 }
@@ -96,12 +98,6 @@ do
       ;;
       --ip=*)   #split by: ip1,ip2,ip3
         IP_LIST=$(echo "${_PARAMETER#--ip=}" | sed 's/,/\n/g' | sed '/^$/d')
-      ;;
-      --username=*)
-        USERNAME="${_PARAMETER#--username=}"
-      ;;
-      --password=*)
-        PASSWORD="${_PARAMETER#--password=}"
       ;;
       *)
         echo "option ${_PARAMETER} is not support"
