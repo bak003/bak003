@@ -165,6 +165,7 @@ uninstall(){
     yum remove -y xl2tpd
     rm -f /etc/xl2tpd/xl2tpd.conf
     rm -f /etc/ppp/options.xl2tpd
+    sed -i "/l2tpd/d" /etc/ppp/chap-secrets
 }
 
 echo "Current Options: $RUN_OPTS"

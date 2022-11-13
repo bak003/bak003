@@ -66,10 +66,10 @@ config_ip(){
     let j=1
     for ip in ${IP_LIST};do
       iptables -t nat -A POSTROUTING -s 10.77.$i.$j -o $eth -j SNAT --to-source $ip
-      echo "iptables -t nat -D POSTROUTING -s 10.77.$i.$j -o $eth -j SNAT --to-source $ip" >> /etc/wireguard/iptables_uninstall.sh
       let j=$j+1
     done
   done
+  service iptables save
 }
 
 
@@ -83,7 +83,6 @@ install(){
 uninstall(){
   wg-quick down wg0
   yum remove -y wireguard-dkms wireguard-tools
-  bash /etc/wireguard/iptables_uninstall.sh
   rm -rf /etc/wireguard/
   echo "卸载完成"
 }

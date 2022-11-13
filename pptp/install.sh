@@ -88,6 +88,7 @@ uninstall(){
   yum remove -y pptpd
   rm -f /etc/pptpd.conf
   rm -f /etc/ppp/options.pptpd
+  sed -i "/pptpd/d" /etc/ppp/chap-secrets
 }
 
 edit(){
@@ -124,7 +125,7 @@ if [ $METHOD -eq 1 ];then
 elif [ $METHOD -eq 2 ];then
     edit
 else
-    echo "method invalid"
+    uninstall
 fi
 
 #clean script
